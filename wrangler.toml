@@ -1,0 +1,13 @@
+name = "lunar-api"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+
+# KV untuk menyimpan API key (hash)
+# Buat dulu: npx wrangler kv namespace create KEYS  -> salin id-nya ke bawah
+[[kv_namespaces]]
+binding = "KEYS"
+id = "GANTI_DENGAN_ID_KV_KAMU"
+
+# Binding ke Workers AI
+[ai]
+binding = "AI"
