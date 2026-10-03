@@ -4,7 +4,19 @@ compatibility_date = "2025-09-01"
 
 # KV untuk menyimpan API key (hash)
 # Buat dulu: npx wrangler kv namespace create KEYS  -> salin id-nya ke bawah
+[[kv_namespaces]]
+binding = "KEYS"
+id = "f68ba5893e5547448015dd320755a1a4"
 
 # Binding ke Workers AI
 [ai]
 binding = "AI"
+
+# Durable Object untuk penghitung limit request/token per API key
+[[durable_objects.bindings]]
+name = "LIMITER"
+class_name = "KeyLimiter"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["KeyLimiter"]
