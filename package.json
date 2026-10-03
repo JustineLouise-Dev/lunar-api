@@ -9,5 +9,7 @@
   },
   "devDependencies": {
     "wrangler": "^4"
-  }
+  },
+  "author": "JustineLouise",
+  "license": "MIT"
 }

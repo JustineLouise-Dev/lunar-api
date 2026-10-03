@@ -1,4 +1,7 @@
 /**
+ * Lunar AI API
+ * Copyright (c) 2026 JustineLouise. Dilisensikan di bawah MIT License (lihat LICENSE).
+ *
  * Lunar AI API - Cloudflare Worker (Workers AI binding)
  *   GET  /v1/models
  *   POST /v1/chat/completions   (streaming, vision, function calling)

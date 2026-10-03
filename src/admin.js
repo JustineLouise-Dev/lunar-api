@@ -1,4 +1,7 @@
 /**
+ * Lunar AI API
+ * Copyright (c) 2026 JustineLouise. Dilisensikan di bawah MIT License (lihat LICENSE).
+ *
  * Web admin untuk membuat / mencabut API key.
  * - Halaman:   GET /admin
  * - API admin: /admin/api/*  (butuh login, cookie sesi bertanda tangan HMAC)
@@ -191,6 +194,24 @@ export async function handleAdmin(request, env, url) {
     return jres({ key: apiKey, id, ...pubMeta(meta) }, 201);
   }
 
+  // Buat ulang key (nama & limit dipertahankan, key lama langsung tidak berlaku)
+  const ro = path.match(/^\/admin\/api\/keys\/([0-9a-f]{64})\/rotate$/);
+  if (ro && request.method === "POST") {
+    const old = await env.KEYS.get(`key:${ro[1]}`, { type: "json" });
+    if (!old) return jres({ error: "Key tidak ditemukan." }, 404);
+    const apiKey = "lunar-sk-" + toHex(crypto.getRandomValues(new Uint8Array(24)));
+    const id = await sha256Hex(apiKey);
+    const meta = {
+      ...old,
+      created: Date.now(),
+      preview: apiKey.slice(0, 13) + "…" + apiKey.slice(-4),
+      enc: await sealKey(env, apiKey),
+    };
+    await putKey(env, id, meta);
+    await env.KEYS.delete(`key:${ro[1]}`);
+    return jres({ key: apiKey, id, ...pubMeta(meta) }, 201);
+  }
+
   // Ambil key asli untuk tombol Salin
   const rv = path.match(/^\/admin\/api\/keys\/([0-9a-f]{64})\/reveal$/);
   if (rv && request.method === "GET") {
@@ -319,6 +340,7 @@ const PAGE = `<!doctype html>
       <div id="empty" class="mut hide" style="padding-top:12px">Belum ada API key.</div>
     </div>
   </section>
+  <p class="mut" style="margin-top:32px;font-size:13px;text-align:center">&copy; 2026 JustineLouise. All rights reserved.</p>
 </main>
 
 <script>
@@ -372,7 +394,6 @@ async function load() {
     cell(tr, usageText(k), "usage");
     var act = document.createElement("td"); act.className = "act";
     var cp = btn("Salin", "ghost", function () { copyKey(k, cp); });
-    if (!k.copyable) { cp.disabled = true; cp.title = "Key lama (dibuat sebelum fitur salin) tidak bisa disalin"; cp.style.opacity = ".5"; cp.style.cursor = "not-allowed"; }
     act.appendChild(cp);
     act.appendChild(btn(k.active ? "Nonaktifkan" : "Aktifkan", "ghost", async function () {
       await api("/keys/" + k.id, { method: "PATCH", body: { active: !k.active } }); load();
@@ -469,6 +490,17 @@ async function copyText(text) {
 
 async function copyKey(k, b) {
   var old = b.textContent;
+  if (!k.copyable) {
+    if (!confirm("Key \\"" + k.name + "\\" dibuat sebelum fitur salin ada, jadi tidak bisa disalin.\\n\\nBuat ulang key? Nama dan limit tetap, tetapi key lama LANGSUNG tidak berlaku dan aplikasi yang memakainya harus diganti.")) return;
+    try {
+      var n = await api("/keys/" + k.id + "/rotate", { method: "POST" });
+      $("#newKey").textContent = n.key;
+      $("#newKeyBox").classList.remove("hide");
+      window.scrollTo(0, 0);
+      load();
+    } catch (err) { alert(err.message); }
+    return;
+  }
   try {
     var d = await api("/keys/" + k.id + "/reveal");
     await copyText(d.key);

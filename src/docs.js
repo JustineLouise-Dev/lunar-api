@@ -1,4 +1,7 @@
 /**
+ * Lunar AI API
+ * Copyright (c) 2026 JustineLouise. Dilisensikan di bawah MIT License (lihat LICENSE).
+ *
  * Halaman dokumentasi publik: GET /docs
  * Hanya menampilkan alias "lunar-*", tidak pernah nama model asli.
  */
@@ -223,7 +226,7 @@ print(len(resp.data[0].embedding))`;
     <tr><td>429</td><td><code>rate_limit_exceeded</code></td><td>Limit request atau token API key sudah habis. Lihat header <code>Retry-After</code>.</td></tr>
     <tr><td>500</td><td><code>server_error</code></td><td>Gagal memproses permintaan di sisi server.</td></tr>
   </table></div>
-  <p class="mut" style="margin-top:40px">Lunar AI API</p>
+  <p class="mut" style="margin-top:40px">Lunar AI API &middot; &copy; 2026 JustineLouise. Dilisensikan di bawah MIT License.</p>
 </main>
 <script>
 document.querySelectorAll("pre").forEach(function (pre) {

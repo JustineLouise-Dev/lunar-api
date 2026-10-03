@@ -1,4 +1,7 @@
 /**
+ * Lunar AI API
+ * Copyright (c) 2026 JustineLouise. Dilisensikan di bawah MIT License (lihat LICENSE).
+ *
  * Penghitung limit per API key (satu Durable Object per key).
  * Periode: hour | day | week | month, memakai zona waktu WIB (UTC+7).
  * Minggu dimulai hari Senin. Jendela direset otomatis saat periode berganti.

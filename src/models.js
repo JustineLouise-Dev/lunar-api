@@ -1,4 +1,7 @@
 /**
+ * Lunar AI API
+ * Copyright (c) 2026 JustineLouise. Dilisensikan di bawah MIT License (lihat LICENSE).
+ *
  * Daftar model: alias "lunar-*" -> model asli di Workers AI.
  * v = mendukung input gambar (vision), t = mendukung function calling.
  * Flag hanya informasi untuk docs & /v1/models, tidak dipakai untuk memblokir.
